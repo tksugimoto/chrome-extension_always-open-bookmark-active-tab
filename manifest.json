@@ -16,12 +16,10 @@
 
 	"background": {
 		"scripts": ["background.js"]
-		//,"persistent": false // イベントページにすると反応が遅くなる
 	},
 
 	"browser_action": {
 		"default_icon": "icon/icon.png"
 		,"default_title": "新しいタブを開いたらアクティブにする"
-	/*	,"default_popup": "popup.html" */
 	}
 }
