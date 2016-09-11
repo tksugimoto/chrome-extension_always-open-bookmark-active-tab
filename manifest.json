@@ -1,0 +1,27 @@
+{
+	"name": "newTabActive",
+	"version": "0.5",
+	"manifest_version": 2,
+
+	"description": "新しいタブを開いたらアクティブにする / 2重に開かれた際閉じる",
+
+	"icons": {
+		"128": "icon/icon.png"
+	},
+	"permissions": [
+		"bookmarks",
+		"tabs",
+		"contextMenus"
+	],
+
+	"background": {
+		"scripts": ["background.js"]
+		//,"persistent": false // イベントページにすると反応が遅くなる
+	},
+
+	"browser_action": {
+		"default_icon": "icon/icon.png"
+		,"default_title": "新しいタブを開いたらアクティブにする"
+	/*	,"default_popup": "popup.html" */
+	}
+}
