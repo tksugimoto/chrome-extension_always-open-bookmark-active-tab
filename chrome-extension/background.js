@@ -8,7 +8,7 @@ function setActiveTab(bool){
 
 function refreshBadge(){
 	chrome.browserAction.setTitle({
-		title: "新しいタブを開いたらアクティブにする : " + (activeOpen ? "ON" : "OFF") + "\nお気に入りから開いた場合は常にアクティブ"
+		title: "新しいタブを開いたらアクティブにする : " + (activeOpen ? "ON" : "OFF\nお気に入りから開いた場合は常にアクティブ")
 	});
 	// バッジテキスト（メールの未読数とか右下に情報を表示）
 	chrome.browserAction.setBadgeText({
