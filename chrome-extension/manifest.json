@@ -1,9 +1,9 @@
 {
-	"name": "newTabActive",
+	"name": "Control behavior of new opened tab",
 	"version": "0.5",
 	"manifest_version": 2,
 
-	"description": "新しいタブを開いたらアクティブにする / 2重に開かれた際閉じる",
+	"description": "ブックマークを新しいタブで開いたらアクティブにする / 2重に開かれた際閉じる",
 
 	"icons": {
 		"128": "icon/icon.png"
