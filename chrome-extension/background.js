@@ -71,34 +71,3 @@ function searchBookmark(url, callback){
 		callback(results.length > 0);
 	});
 }
-
-/**************************************************/
-
-const targetUrlPatterns = [
-	"*://*/*.jpeg*",
-	"*://*/*.jpg*",
-	"*://*/*.png*",
-	"*://*/*.gif*",
-];
-chrome.contextMenus.create({
-	title: "画像を新しいタブで開く（アクティブ）",
-	contexts: ["link", "image"],
-	onclick: (info, tab) => {
-		const imgURL = URLcheck(info.linkUrl, info.srcUrl);
-		chrome.tabs.create({
-			url: imgURL,
-			selected: true
-		});
-	},
-	targetUrlPatterns: targetUrlPatterns
-});
-
-
-const imageLinkPattern = /[.](?:jpe?g|gif|png)/;
-function URLcheck(){
-	for (const url of arguments) {
-		if (imageLinkPattern.test(url)) return url;
-	}
-}
-
-/**************************************************/
