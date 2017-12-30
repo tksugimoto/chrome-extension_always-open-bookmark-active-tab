@@ -42,7 +42,7 @@ chrome.tabs.onCreated.addListener(info => {
 	
 	if (activeOpen) {
 		show(tabId);
-		return
+		return;
 	}
 	if (typeof info.openerTabId === "undefined") {
 		// tabs権限
