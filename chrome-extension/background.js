@@ -1,18 +1,18 @@
-"use strict";
+'use strict';
 
-let activeOpen = localStorage["activeOpen"] === "true";
+let activeOpen = localStorage['activeOpen'] === 'true';
 function setActiveTab(bool){
 	activeOpen = bool;
-	localStorage["activeOpen"] = bool;
+	localStorage['activeOpen'] = bool;
 }
 
 function refreshBadge(){
 	chrome.browserAction.setTitle({
-		title: "新しいタブを開いたらアクティブにする : " + (activeOpen ? "ON" : "OFF\nお気に入りから開いた場合は常にアクティブ")
+		title: '新しいタブを開いたらアクティブにする : ' + (activeOpen ? 'ON' : 'OFF\nお気に入りから開いた場合は常にアクティブ'),
 	});
 	// バッジテキスト（メールの未読数とか右下に情報を表示）
 	chrome.browserAction.setBadgeText({
-		text: activeOpen ? "on" : ""
+		text: activeOpen ? 'on' : '',
 	});
 }
 
@@ -24,7 +24,7 @@ chrome.browserAction.onClicked.addListener(() => {
 });
 
 
-let last_url = "dummy";
+let last_url = 'dummy';
 let last_timestamp = 0;
 // タブが開いた時
 chrome.tabs.onCreated.addListener(info => {
@@ -42,11 +42,11 @@ chrome.tabs.onCreated.addListener(info => {
 	
 	if (activeOpen) {
 		show(tabId);
-		return
+		return;
 	}
-	if (typeof info.openerTabId === "undefined") {
+	if (typeof info.openerTabId === 'undefined') {
 		// tabs権限
-		if (info.url === "") {
+		if (info.url === '') {
 			// javascriptとか
 			show(tabId);
 		} else {
@@ -60,13 +60,13 @@ chrome.tabs.onCreated.addListener(info => {
 
 function show(tabId){
 	chrome.tabs.update(tabId, {
-		selected : true
+		selected : true,
 	});
 }
 
 function searchBookmark(url, callback){
 	chrome.bookmarks.search({
-		url: url
+		url,
 	}, results => {
 		callback(results.length > 0);
 	});
