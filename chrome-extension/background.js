@@ -66,7 +66,7 @@ function show(tabId){
 
 function searchBookmark(url, callback){
 	chrome.bookmarks.search({
-		url: url,
+		url,
 	}, results => {
 		callback(results.length > 0);
 	});
