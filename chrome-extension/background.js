@@ -31,7 +31,7 @@ chrome.tabs.onCreated.addListener(info => {
 	const tabId = info.id;
 	
 	// たまに同じタブが2重3重に開く時があるので、その時に閉じる
-	if (/^(?:http|file|$)/.test(last_url) && last_url === info.url && (Date.now() - last_timestamp) < 1000) {
+	if (/^(?:http|file)/.test(last_url) && last_url === info.url && (Date.now() - last_timestamp) < 1000) {
 		chrome.tabs.remove(tabId);
 		last_timestamp = Date.now();
 		return;
