@@ -27,30 +27,30 @@ chrome.browserAction.onClicked.addListener(() => {
 let last_url = 'dummy';
 let last_timestamp = 0;
 // タブが開いた時
-chrome.tabs.onCreated.addListener(info => {
-	const tabId = info.id;
-	
+chrome.tabs.onCreated.addListener(tab => {
+	const tabId = tab.id;
+
 	// たまに同じタブが2重3重に開く時があるので、その時に閉じる
-	if (/^(?:http|file)/.test(last_url) && last_url === info.url && (Date.now() - last_timestamp) < 1000) {
+	if (/^(?:http|file)/.test(last_url) && last_url === tab.url && (Date.now() - last_timestamp) < 1000) {
 		chrome.tabs.remove(tabId);
 		last_timestamp = Date.now();
 		return;
 	}
-	last_url = info.url;
+	last_url = tab.url;
 	last_timestamp = Date.now();
 	// 2重3重対策ここまで
-	
+
 	if (activeOpen) {
 		show(tabId);
 		return;
 	}
-	if (typeof info.openerTabId === 'undefined') {
+	if (typeof tab.openerTabId === 'undefined') {
 		// tabs権限
-		if (info.url === '') {
+		if (tab.url === '') {
 			// javascriptとか
 			show(tabId);
 		} else {
-			searchBookmark(info.url, isBookmark => {
+			searchBookmark(tab.url, isBookmark => {
 				if (isBookmark) show(tabId);
 			});
 		}
