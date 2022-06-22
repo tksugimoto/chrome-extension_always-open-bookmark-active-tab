@@ -6,6 +6,7 @@
 	"description": "ブックマークを新しいタブで開いたらアクティブにする / 2重に開かれた際閉じる",
 
 	"permissions": [
+		"storage",
 		"bookmarks",
 		"tabs"
 	],

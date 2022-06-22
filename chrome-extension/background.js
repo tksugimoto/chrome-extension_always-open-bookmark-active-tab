@@ -1,12 +1,20 @@
 'use strict';
 
-let activeOpen = localStorage['activeOpen'] === 'true';
-function setActiveTab(bool){
-	activeOpen = bool;
-	localStorage['activeOpen'] = bool;
+function getActiveOpen(callback) {
+	chrome.storage.local.get({
+		activeOpen: false /* default value */,
+	}, ({activeOpen}) => {
+		callback(activeOpen);
+	});
 }
 
-function refreshBadge(){
+function setActiveTab(bool){
+	chrome.storage.local.set({
+		activeOpen: bool,
+	});
+}
+
+function refreshBadge(activeOpen){
 	chrome.browserAction.setTitle({
 		title: '新しいタブを開いたらアクティブにする : ' + (activeOpen ? 'ON' : 'OFF\nお気に入りから開いた場合は常にアクティブ'),
 	});
@@ -16,11 +24,13 @@ function refreshBadge(){
 	});
 }
 
-refreshBadge();
+getActiveOpen(refreshBadge);
 
 chrome.browserAction.onClicked.addListener(() => {
-	setActiveTab(!activeOpen);
-	refreshBadge();
+	getActiveOpen(activeOpen => {
+		setActiveTab(!activeOpen);
+		refreshBadge(!activeOpen);
+	});
 });
 
 
@@ -41,21 +51,23 @@ chrome.tabs.onCreated.addListener(tab => {
 	last_timestamp = Date.now();
 	// 2重3重対策ここまで
 
-	if (activeOpen) {
-		show(tabId);
-		return;
-	}
-	if (typeof tab.openerTabId === 'undefined') {
-		// tabs権限
-		if (url === '') {
-			// javascriptとか
+	getActiveOpen(activeOpen => {
+		if (activeOpen) {
 			show(tabId);
-		} else {
-			searchBookmark(url, isBookmark => {
-				if (isBookmark) show(tabId);
-			});
+			return;
 		}
-	}
+		if (typeof tab.openerTabId === 'undefined') {
+			// tabs権限
+			if (url === '') {
+				// javascriptとか
+				show(tabId);
+			} else {
+				searchBookmark(url, isBookmark => {
+					if (isBookmark) show(tabId);
+				});
+			}
+		}
+	});
 });
 
 
