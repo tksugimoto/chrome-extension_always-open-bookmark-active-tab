@@ -15,18 +15,18 @@ function setActiveOpen(bool){
 }
 
 function refreshBadge(activeOpen){
-	chrome.browserAction.setTitle({
+	chrome.action.setTitle({
 		title: '新しいタブを開いたらアクティブにする : ' + (activeOpen ? 'ON' : 'OFF\nお気に入りから開いた場合は常にアクティブ'),
 	});
 	// バッジテキスト（メールの未読数とか右下に情報を表示）
-	chrome.browserAction.setBadgeText({
+	chrome.action.setBadgeText({
 		text: activeOpen ? 'on' : '',
 	});
 }
 
 getActiveOpen(refreshBadge);
 
-chrome.browserAction.onClicked.addListener(() => {
+chrome.action.onClicked.addListener(() => {
 	getActiveOpen(activeOpen => {
 		setActiveOpen(!activeOpen);
 		refreshBadge(!activeOpen);
