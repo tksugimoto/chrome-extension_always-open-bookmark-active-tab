@@ -8,7 +8,7 @@ function getActiveOpen(callback) {
 	});
 }
 
-function setActiveTab(bool){
+function setActiveOpen(bool){
 	chrome.storage.local.set({
 		activeOpen: bool,
 	});
@@ -28,7 +28,7 @@ getActiveOpen(refreshBadge);
 
 chrome.browserAction.onClicked.addListener(() => {
 	getActiveOpen(activeOpen => {
-		setActiveTab(!activeOpen);
+		setActiveOpen(!activeOpen);
 		refreshBadge(!activeOpen);
 	});
 });
