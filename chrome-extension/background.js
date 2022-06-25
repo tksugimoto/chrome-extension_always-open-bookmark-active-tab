@@ -39,7 +39,7 @@ let last_timestamp = 0;
 // タブが開いた時
 chrome.tabs.onCreated.addListener(tab => {
 	const tabId = tab.id;
-	const url = tab.url;
+	const url = tab.pendingUrl || tab.url;
 
 	// たまに同じタブが2重3重に開く時があるので、その時に閉じる
 	if (/^(?:http|file)/.test(last_url) && last_url === url && (Date.now() - last_timestamp) < 1000) {
