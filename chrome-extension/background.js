@@ -1,12 +1,20 @@
 'use strict';
 
-let activeOpen = localStorage['activeOpen'] === 'true';
-function setActiveTab(bool){
-	activeOpen = bool;
-	localStorage['activeOpen'] = bool;
+function getActiveOpen(callback) {
+	chrome.storage.local.get({
+		activeOpen: false /* default value */,
+	}, ({activeOpen}) => {
+		callback(activeOpen);
+	});
 }
 
-function refreshBadge(){
+function setActiveOpen(bool){
+	chrome.storage.local.set({
+		activeOpen: bool,
+	});
+}
+
+function refreshBadge(activeOpen){
 	chrome.browserAction.setTitle({
 		title: '新しいタブを開いたらアクティブにする : ' + (activeOpen ? 'ON' : 'OFF\nお気に入りから開いた場合は常にアクティブ'),
 	});
@@ -16,11 +24,13 @@ function refreshBadge(){
 	});
 }
 
-refreshBadge();
+getActiveOpen(refreshBadge);
 
 chrome.browserAction.onClicked.addListener(() => {
-	setActiveTab(!activeOpen);
-	refreshBadge();
+	getActiveOpen(activeOpen => {
+		setActiveOpen(!activeOpen);
+		refreshBadge(!activeOpen);
+	});
 });
 
 
@@ -29,32 +39,35 @@ let last_timestamp = 0;
 // タブが開いた時
 chrome.tabs.onCreated.addListener(tab => {
 	const tabId = tab.id;
+	const url = tab.url;
 
 	// たまに同じタブが2重3重に開く時があるので、その時に閉じる
-	if (/^(?:http|file)/.test(last_url) && last_url === tab.url && (Date.now() - last_timestamp) < 1000) {
+	if (/^(?:http|file)/.test(last_url) && last_url === url && (Date.now() - last_timestamp) < 1000) {
 		chrome.tabs.remove(tabId);
 		last_timestamp = Date.now();
 		return;
 	}
-	last_url = tab.url;
+	last_url = url;
 	last_timestamp = Date.now();
 	// 2重3重対策ここまで
 
-	if (activeOpen) {
-		show(tabId);
-		return;
-	}
-	if (typeof tab.openerTabId === 'undefined') {
-		// tabs権限
-		if (tab.url === '') {
-			// javascriptとか
+	getActiveOpen(activeOpen => {
+		if (activeOpen) {
 			show(tabId);
-		} else {
-			searchBookmark(tab.url, isBookmark => {
-				if (isBookmark) show(tabId);
-			});
+			return;
 		}
-	}
+		if (typeof tab.openerTabId === 'undefined') {
+			// tabs権限
+			if (url === '') {
+				// javascriptとか
+				show(tabId);
+			} else {
+				searchBookmark(url, isBookmark => {
+					if (isBookmark) show(tabId);
+				});
+			}
+		}
+	});
 });
 
 
