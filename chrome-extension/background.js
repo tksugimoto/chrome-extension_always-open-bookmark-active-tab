@@ -56,16 +56,14 @@ chrome.tabs.onCreated.addListener(tab => {
 			show(tabId);
 			return;
 		}
-		if (typeof tab.openerTabId === 'undefined') {
-			// tabs権限
-			if (url === '') {
-				// javascriptとか
-				show(tabId);
-			} else {
-				searchBookmark(url, isBookmark => {
-					if (isBookmark) show(tabId);
-				});
-			}
+		// tabs権限
+		if (url === '') {
+			// javascriptとか
+			show(tabId);
+		} else {
+			searchBookmark(url, isBookmark => {
+				if (isBookmark) show(tabId);
+			});
 		}
 	});
 });
